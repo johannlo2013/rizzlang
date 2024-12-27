@@ -52,32 +52,32 @@
 
         // RizzLang slang dictionary
         const rizzSlang = {
-            "flex": "print",
-            "vibe": "def",
+            "flex": "console.log",
+            "vibe": "function",
             "bet": "if",
-            "nobet": "elif",
+            "nobet": "else if",
             "nocap": "else",
             "squad": "for",
             "grind": "while",
             "bounce": "break",
             "chill": "continue",
             "dip": "return",
-            "pause": "pass",
+            "pause": "//",
             "slide": "import",
             "block": "try",
-            "fade": "except",
+            "fade": "catch",
             "glow": "assert",
-            "lit": "True",
-            "sus": "False",
-            "flexin": "len",
+            "lit": "true",
+            "sus": "false",
+            "flexin": "length",
             "loop": "range",
             "fam": "in",
             "slay": "not",
-            "real": "and",
-            "cap": "or",
+            "real": "&&",
+            "cap": "||",
         };
 
-        // Function to interpret RizzLang to Python
+        // Function to interpret RizzLang to JavaScript
         function interpretRizzLang(code) {
             const lines = code.split('\n');
             return lines.map(line => {
@@ -91,17 +91,12 @@
         // Run button click event
         document.getElementById('runCode').addEventListener('click', () => {
             const rizzCode = editor.getValue();
-            const pythonCode = interpretRizzLang(rizzCode);
+            const jsCode = interpretRizzLang(rizzCode);
 
             try {
-                // Capture and execute "print" outputs
-                const outputBuffer = [];
-                const print = (...args) => {
-                    outputBuffer.push(args.join(' '));
-                };
-                const func = new Function('print', pythonCode);
-                func(print);
-                outputDiv.textContent = outputBuffer.join('\n');
+                // Use Function constructor to safely evaluate the JavaScript code
+                const func = new Function(jsCode);
+                func();
             } catch (err) {
                 outputDiv.textContent = `Error: ${err.message}`;
             }
