@@ -6,9 +6,8 @@
     <title>RizzLang Code Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -89,9 +88,13 @@
             const pythonCode = interpretRizzLang(rizzCode);
             
             try {
-                // Using eval to execute Python-like code
-                const result = eval(pythonCode);
-                outputDiv.textContent = result || "Executed successfully.";
+                // Capture and execute "print" outputs
+                const outputBuffer = [];
+                const print = (...args) => {
+                    outputBuffer.push(args.join(' '));
+                };
+                eval(pythonCode);
+                outputDiv.textContent = outputBuffer.join('\n');
             } catch (err) {
                 outputDiv.textContent = `Error: ${err.message}`;
             }
