@@ -79,21 +79,28 @@
 
         // Function to interpret RizzLang to Python
         function interpretRizzLang(code) {
-            return code.split(/\b/).map(word => rizzSlang[word] || word).join('');
+            const lines = code.split('\n');
+            return lines.map(line => {
+                // Preserve indentation
+                const indent = line.match(/^\s*/)[0];
+                const translatedLine = line.trim().split(/\b/).map(word => rizzSlang[word] || word).join('');
+                return indent + translatedLine;
+            }).join('\n');
         }
 
         // Run button click event
         document.getElementById('runCode').addEventListener('click', () => {
             const rizzCode = editor.getValue();
             const pythonCode = interpretRizzLang(rizzCode);
-            
+
             try {
                 // Capture and execute "print" outputs
                 const outputBuffer = [];
                 const print = (...args) => {
                     outputBuffer.push(args.join(' '));
                 };
-                eval(pythonCode);
+                const func = new Function('print', pythonCode);
+                func(print);
                 outputDiv.textContent = outputBuffer.join('\n');
             } catch (err) {
                 outputDiv.textContent = `Error: ${err.message}`;
