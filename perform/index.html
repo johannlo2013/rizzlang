@@ -98,8 +98,11 @@
 
             try {
                 const pyodide = await pyodideReadyPromise;
-                const result = pyodide.runPython(pythonCode);
-                outputDiv.textContent = result || "Executed successfully.";
+                // Redirect stdout to capture output
+                pyodide.runPython(`import sys\nfrom io import StringIO\nsys.stdout = StringIO()`);
+                pyodide.runPython(pythonCode);
+                const output = pyodide.runPython("sys.stdout.getvalue()");
+                outputDiv.textContent = output || "Executed successfully.";
             } catch (err) {
                 outputDiv.textContent = `Error: ${err.message}`;
             }
