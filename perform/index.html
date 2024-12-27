@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RizzLang Code Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #editor {
+            flex: 1;
+            border: 1px solid #ccc;
+        }
+        #output {
+            height: 200px;
+            background: #f9f9f9;
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>RizzLang Code Editor</h1>
+    <div id="editor"></div>
+    <button id="runCode">Run</button>
+    <div id="output"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    <script>
+        // Initialize CodeMirror editor
+        const editor = CodeMirror(document.getElementById('editor'), {
+            mode: 'python',
+            lineNumbers: true,
+            theme: 'default'
+        });
+
+        const outputDiv = document.getElementById('output');
+
+        // RizzLang slang dictionary
+        const rizzSlang = {
+            "flex": "print",
+            "vibe": "def",
+            "bet": "if",
+            "nobet": "elif",
+            "nocap": "else",
+            "squad": "for",
+            "grind": "while",
+            "bounce": "break",
+            "chill": "continue",
+            "dip": "return",
+            "pause": "pass",
+            "slide": "import",
+            "block": "try",
+            "fade": "except",
+            "glow": "assert",
+            "lit": "True",
+            "sus": "False",
+            "flexin": "len",
+            "loop": "range",
+            "fam": "in",
+            "slay": "not",
+            "real": "and",
+            "cap": "or",
+        };
+
+        // Function to interpret RizzLang to Python
+        function interpretRizzLang(code) {
+            return code.split(/\b/).map(word => rizzSlang[word] || word).join('');
+        }
+
+        // Run button click event
+        document.getElementById('runCode').addEventListener('click', () => {
+            const rizzCode = editor.getValue();
+            const pythonCode = interpretRizzLang(rizzCode);
+            
+            try {
+                // Using eval to execute Python-like code
+                const result = eval(pythonCode);
+                outputDiv.textContent = result || "Executed successfully.";
+            } catch (err) {
+                outputDiv.textContent = `Error: ${err.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
